@@ -2,6 +2,7 @@
 # APMA 3100 
 # Tim Han, Vinh Do, John Burkher, Elias Haddad
 import numpy as np
+import math
 
 def generateNextRandomNumber(x_i):
     x_i = (a*x_i + c) % K
@@ -11,30 +12,34 @@ def generateNextRandomNumber(x_i):
 def inverse(u): #randomVariableGenerator
     return -12 * np.log(1-u)
 
-def simulate(x_i):
+def simulate(u):
     W = 0
     calls = 0
     while calls < 4:
         calls+=1
         W += 6
-        x_i, u_i = generateNextRandomNumber(x_i)
-        if (u_i >= 0 and u_i < .2): #busy
+        if (u >= 0 and u < .2): #busy
             W += 3
-        elif (u_i >= .2 and u_i < .5): #unavailable
+            u = u/.2
+        elif (u >= .2 and u < .5): #unavailable
             W += 25
-        elif (u_i >= .5 and u_i <=1): #available
-            x_i, u_i = generateNextRandomNumber(x_i)
-            pickup_time = inverse(u_i)
-            if (pickup_time >= 0 or pickup_time <= 25):
+            u = (u-.2)/.3
+        elif (u >= .5 and u <=1): #available
+            u=(u-.5)/.5
+            pickup_time = inverse(u)
+            if (pickup_time >= 0 and pickup_time <= 25):
                 W += pickup_time
                 break
             else:
                 W += 25
+                u=(u-math.exp(-25/12))/(1-math.exp(-25/12))
         W += 1
-    return W, x_i
+    return W
 
 if __name__ == "__main__":
     
+    
+    #'''
     x_i = 1000
     a = 24693
     c = 3517
@@ -44,9 +49,10 @@ if __name__ == "__main__":
     mean = 0
     current = 0
     
-    #'''
+    
     for n in range(1, 1001):
-        W, x_i = simulate(x_i)
+        x_i, u_i = generateNextRandomNumber(x_i)
+        W = simulate(u_i)
         mean += W
         call_times.append(W)
         #print(x_i)
@@ -91,6 +97,8 @@ if __name__ == "__main__":
         if call_times[n] > 115:
             print(">115", (1000-n)/1000)
             break
+    
+    #'''
     
     
     #'''
