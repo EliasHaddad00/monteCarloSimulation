@@ -18,6 +18,7 @@ def simulate(x_i):
         calls+=1
         W += 6
         x_i, u_i = generateNextRandomNumber(x_i)
+        
         if (u_i >= 0 and u_i < .2): #busy
             W += 3
         elif (u_i >= .2 and u_i < .5): #unavailable
@@ -25,7 +26,7 @@ def simulate(x_i):
         elif (u_i >= .5 and u_i <=1): #available
             x_i, u_i = generateNextRandomNumber(x_i)
             pickup_time = inverse(u_i)
-            if (pickup_time >= 0 or pickup_time <= 25):
+            if (pickup_time >= 0 and pickup_time <= 25):
                 W += pickup_time
                 break
             else:
@@ -49,10 +50,8 @@ if __name__ == "__main__":
         W, x_i = simulate(x_i)
         mean += W
         call_times.append(W)
-        #print(x_i)
     
     call_times.sort()
-    
     mean = mean / n
     median = (call_times[499] + call_times[500] ) / 2
     first_quartile = ( call_times[249] + call_times[250] ) / 2
