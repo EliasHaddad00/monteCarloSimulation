@@ -18,7 +18,6 @@ def simulate(x_i):
         calls+=1
         W += 6
         x_i, u_i = generateNextRandomNumber(x_i)
-        
         if (u_i >= 0 and u_i < .2): #busy
             W += 3
         elif (u_i >= .2 and u_i < .5): #unavailable
